@@ -1,8 +1,13 @@
 import { Component } from 'react';
-import Node from '../classes/Node';
+import './NodeCell.css';
 
 interface NodeProps {
-  node: Node;
+  row: number;
+  col: number;
+  isVisited: boolean;
+  isStart: boolean;
+  isEnd: boolean;
+  isWall: boolean;
   onMouseDown: (row: number, col: number) => void;
   onMouseEnter: (row: number, col: number) => void;
   onMouseUp: (row: number, col: number) => void;
@@ -10,9 +15,26 @@ interface NodeProps {
 
 export default class NodeCell extends Component<NodeProps> {
   render() {
-    const { node, onMouseDown, onMouseEnter, onMouseUp } = this.props;
-    const { row, col } = node;
-    const className = node.isWall ? 'node-wall' : '';
+    const {
+      row,
+      col,
+      isStart,
+      isEnd,
+      isWall,
+      isVisited,
+      onMouseDown,
+      onMouseEnter,
+      onMouseUp,
+    } = this.props;
+    const className = isStart
+      ? 'node-start'
+      : isEnd
+      ? 'node-end'
+      : isWall
+      ? 'node-wall'
+      : isVisited
+      ? 'node-visited'
+      : '';
     return (
       <div
         className={`node ${className}`}
