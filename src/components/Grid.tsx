@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import Dijkstra from '../classes/Dijkstra';
 import Node from '../classes/Node';
+import PathfindingAlgorithm from '../classes/PathfindingAlgorithm';
 import PathfindingResult from '../classes/PathfindingResult';
 import './Grid.css';
 import NodeCell from './NodeCell';
@@ -8,6 +9,7 @@ import NodeCell from './NodeCell';
 interface GridProps {
   numRows: number;
   numCols: number;
+  pathfindingAlgorithm: PathfindingAlgorithm;
 }
 
 interface GridState {
