@@ -136,7 +136,7 @@ export default class Grid extends Component<GridProps, GridState> {
       newGrid.push(newRow);
     }
 
-    console.log(newGrid);
+    //console.log(newGrid);
 
     const startNode: Node = newGrid[START_NODE_ROW][START_NODE_COL];
     const endNode: Node = newGrid[END_NODE_ROW][END_NODE_COL];
@@ -160,7 +160,7 @@ export default class Grid extends Component<GridProps, GridState> {
 
   animatePathfinding(visitedNodes: Node[], shortestPath: Node[]) {
     for (let i = 0; i <= visitedNodes.length; i++) {
-      console.log(i, visitedNodes.length);
+      //console.log(i, visitedNodes.length);
       if (i === visitedNodes.length) {
         setTimeout(() => {
           this.animateShortestPath(shortestPath);
