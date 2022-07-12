@@ -43,10 +43,12 @@ export default class Grid extends Component<GridProps, GridState> {
           row: row,
           col: col,
           distance: Infinity,
+          previous: undefined,
           isVisited: false,
           isWall: false,
           isStart: row === START_NODE_ROW && col === START_NODE_COL,
           isEnd: row === END_NODE_ROW && col === END_NODE_COL,
+          isShortestPath: false,
         };
         currentRow.push(node);
       }
@@ -91,13 +93,27 @@ export default class Grid extends Component<GridProps, GridState> {
   };
 
   toggleVisited = (row: number, col: number) => {
-    console.log('toggling ', row, col);
+    //console.log('toggling ', row, col);
     const { grid } = this.state;
     const newGrid = grid.slice();
     const node = newGrid[row][col];
     const newNode = {
       ...node,
       isVisited: true,
+    };
+    newGrid[row][col] = newNode;
+    this.setState({
+      grid: newGrid,
+    });
+  };
+
+  toggleShortestPath = (row: number, col: number) => {
+    const { grid } = this.state;
+    const newGrid = grid.slice();
+    const node = newGrid[row][col];
+    const newNode = {
+      ...node,
+      isShortestPath: true,
     };
     newGrid[row][col] = newNode;
     this.setState({
@@ -132,14 +148,42 @@ export default class Grid extends Component<GridProps, GridState> {
     )!;
 
     const { visitedNodes, shortestPath } = result;
-    for (let i = 0; i < visitedNodes.length; i++) {
+    // for (let i = 0; i < visitedNodes.length; i++) {
+    //   setTimeout(() => {
+    //     const node = visitedNodes[i];
+    //     const { row, col } = node;
+    //     this.toggleVisited(row, col);
+    //   }, 20 * i);
+    // }
+    this.animatePathfinding(visitedNodes, shortestPath);
+  };
+
+  animatePathfinding(visitedNodes: Node[], shortestPath: Node[]) {
+    for (let i = 0; i <= visitedNodes.length; i++) {
+      console.log(i, visitedNodes.length);
+      if (i === visitedNodes.length) {
+        setTimeout(() => {
+          this.animateShortestPath(shortestPath);
+        }, 20 * i);
+        return;
+      }
       setTimeout(() => {
         const node = visitedNodes[i];
         const { row, col } = node;
         this.toggleVisited(row, col);
       }, 20 * i);
     }
-  };
+  }
+
+  animateShortestPath(shortestPath: Node[]) {
+    for (let i = 0; i < shortestPath.length; i++) {
+      setTimeout(() => {
+        const node = shortestPath[i];
+        const { row, col } = node;
+        this.toggleShortestPath(row, col);
+      }, 50 * i);
+    }
+  }
 
   render() {
     const { grid } = this.state;

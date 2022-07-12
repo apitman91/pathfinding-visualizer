@@ -8,6 +8,7 @@ interface NodeProps {
   isStart: boolean;
   isEnd: boolean;
   isWall: boolean;
+  isShortestPath: boolean;
   onMouseDown: (row: number, col: number) => void;
   onMouseEnter: (row: number, col: number) => void;
   onMouseUp: (row: number, col: number) => void;
@@ -22,6 +23,7 @@ export default class NodeCell extends Component<NodeProps> {
       isEnd,
       isWall,
       isVisited,
+      isShortestPath,
       onMouseDown,
       onMouseEnter,
       onMouseUp,
@@ -32,6 +34,8 @@ export default class NodeCell extends Component<NodeProps> {
       ? 'node-end'
       : isWall
       ? 'node-wall'
+      : isShortestPath
+      ? 'node-shortest-path'
       : isVisited
       ? 'node-visited'
       : '';
