@@ -95,7 +95,6 @@ export default class Grid extends Component<GridProps, GridState> {
   };
 
   toggleVisited = (row: number, col: number) => {
-    //console.log('toggling ', row, col);
     const { grid } = this.state;
     const newGrid = grid.slice();
     const node = newGrid[row][col];
@@ -137,9 +136,6 @@ export default class Grid extends Component<GridProps, GridState> {
       }
       newGrid.push(newRow);
     }
-
-    //console.log(newGrid);
-
     const startNode: Node = newGrid[START_NODE_ROW][START_NODE_COL];
     const endNode: Node = newGrid[END_NODE_ROW][END_NODE_COL];
     const algo: Dijkstra = new Dijkstra();
@@ -162,7 +158,6 @@ export default class Grid extends Component<GridProps, GridState> {
 
   animatePathfinding(visitedNodes: Node[], shortestPath: Node[]) {
     for (let i = 0; i <= visitedNodes.length; i++) {
-      //console.log(i, visitedNodes.length);
       if (i === visitedNodes.length) {
         setTimeout(() => {
           this.animateShortestPath(shortestPath);

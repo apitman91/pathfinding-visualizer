@@ -69,7 +69,6 @@ export default class Dijkstra implements PathfindingAlgorithm {
     const shortestPath: Node[] = [];
     let currentNode = endNode;
     while (currentNode !== undefined) {
-      console.log(currentNode.distance);
       shortestPath.unshift(currentNode);
       currentNode = currentNode.previous!;
     }

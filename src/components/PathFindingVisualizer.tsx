@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Dijkstra from '../classes/Dijkstra';
 import Node from '../classes/Node';
 import PathfindingAlgorithm from '../classes/PathfindingAlgorithm';
 import PathfindingResult from '../classes/PathfindingResult';
@@ -7,7 +6,12 @@ import ApplicationBar from './ApplicationBar';
 import NodeGrid from './NodeGrid';
 
 interface PathfindingVisualizerProps {
-  algorithms?: PathfindingAlgorithm[];
+  numRows: number;
+  numCols: number;
+  startNodeRow: number;
+  startNodeCol: number;
+  endNodeRow: number;
+  endNodeCol: number;
   pathfindingAlgorithms: Map<string, PathfindingAlgorithm>;
 }
 
@@ -17,33 +21,34 @@ interface PathfindingVisualizerState {
   isMouseDown: boolean;
 }
 
-const NUM_ROWS = 20;
-const NUM_COLS = 20;
-const START_NODE_ROW = 10;
-const START_NODE_COL = 5;
-const END_NODE_ROW = 10;
-const END_NODE_COL = 15;
-
 export default class PathfindingVisualizer extends Component<
   PathfindingVisualizerProps,
   PathfindingVisualizerState
 > {
   constructor(props: PathfindingVisualizerProps) {
     super(props);
-    const a = props.pathfindingAlgorithms.entries().next().value;
+    const selectedAlgorithm = props.pathfindingAlgorithms.values().next().value;
     const graph: Node[][] = this.generateGraph();
     this.state = {
-      selectedAlgorithm: new Dijkstra(),
+      selectedAlgorithm: selectedAlgorithm,
       graph: graph,
       isMouseDown: false,
     };
   }
 
   generateGraph(): Node[][] {
+    const {
+      numRows,
+      numCols,
+      startNodeRow,
+      startNodeCol,
+      endNodeRow,
+      endNodeCol,
+    } = this.props;
     const graph: Node[][] = [];
-    for (let row = 0; row < NUM_ROWS; row++) {
+    for (let row = 0; row < numRows; row++) {
       const currentRow: Node[] = [];
-      for (let col = 0; col < NUM_COLS; col++) {
+      for (let col = 0; col < numCols; col++) {
         let node: Node = {
           row: row,
           col: col,
@@ -51,8 +56,8 @@ export default class PathfindingVisualizer extends Component<
           previous: undefined,
           isVisited: false,
           isWall: false,
-          isStart: row === START_NODE_ROW && col === START_NODE_COL,
-          isEnd: row === END_NODE_ROW && col === END_NODE_COL,
+          isStart: row === startNodeRow && col === startNodeCol,
+          isEnd: row === endNodeRow && col === endNodeCol,
           isShortestPath: false,
         };
         currentRow.push(node);
@@ -85,11 +90,9 @@ export default class PathfindingVisualizer extends Component<
       }
       newGrid.push(newRow);
     }
-
-    //console.log(newGrid);
-
-    const startNode: Node = newGrid[START_NODE_ROW][START_NODE_COL];
-    const endNode: Node = newGrid[END_NODE_ROW][END_NODE_COL];
+    const { startNodeRow, startNodeCol, endNodeRow, endNodeCol } = this.props;
+    const startNode: Node = newGrid[startNodeRow][startNodeCol];
+    const endNode: Node = newGrid[endNodeRow][endNodeCol];
     const { selectedAlgorithm } = this.state;
     const result: PathfindingResult = selectedAlgorithm.findShortestPath(
       newGrid,
@@ -98,6 +101,13 @@ export default class PathfindingVisualizer extends Component<
     )!;
     const { visitedNodes, shortestPath } = result;
     this.animatePathfinding(visitedNodes, shortestPath);
+  };
+
+  handleClearClicked = () => {
+    const graph: Node[][] = this.generateGraph();
+    this.setState({
+      graph: graph,
+    });
   };
 
   handleMouseDown = (row: number, col: number) => {
@@ -135,7 +145,6 @@ export default class PathfindingVisualizer extends Component<
 
   animatePathfinding(visitedNodes: Node[], shortestPath: Node[]) {
     for (let i = 0; i <= visitedNodes.length; i++) {
-      console.log(i, visitedNodes.length);
       if (i === visitedNodes.length) {
         setTimeout(() => {
           this.animateShortestPath(shortestPath);
@@ -175,7 +184,6 @@ export default class PathfindingVisualizer extends Component<
   };
 
   toggleVisited = (row: number, col: number) => {
-    //console.log('toggling ', row, col);
     const { graph } = this.state;
     const newGrid = graph.slice();
     const node = newGrid[row][col];
@@ -202,6 +210,7 @@ export default class PathfindingVisualizer extends Component<
           algorithms={algorithmOptions}
           onAlgorithmSelected={this.handleAlgorithmSelected}
           onVisualize={this.handleVisualizeClicked}
+          onClear={this.handleClearClicked}
         ></ApplicationBar>
         <NodeGrid
           graph={graph}
