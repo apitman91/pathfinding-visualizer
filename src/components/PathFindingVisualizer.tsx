@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Node from '../classes/Node';
 import PathfindingAlgorithm from '../classes/PathfindingAlgorithm';
 import PathfindingResult from '../classes/PathfindingResult';
-import ApplicationBar from './ApplicationBar';
+import GridTest from './GridTest';
+import NavBar from './NavBar';
 import NodeGrid from './NodeGrid';
 
 interface PathfindingVisualizerProps {
@@ -17,6 +18,7 @@ interface PathfindingVisualizerProps {
 
 interface PathfindingVisualizerState {
   selectedAlgorithm: PathfindingAlgorithm;
+  selectedAlgorithmName: string | undefined;
   graph: Node[][];
   isMouseDown: boolean;
 }
@@ -28,9 +30,11 @@ export default class PathfindingVisualizer extends Component<
   constructor(props: PathfindingVisualizerProps) {
     super(props);
     const selectedAlgorithm = props.pathfindingAlgorithms.values().next().value;
+    console.log(Array.from(props.pathfindingAlgorithms)[0]);
     const graph: Node[][] = this.generateGraph();
     this.state = {
       selectedAlgorithm: selectedAlgorithm,
+      selectedAlgorithmName: undefined,
       graph: graph,
       isMouseDown: false,
     };
@@ -197,27 +201,38 @@ export default class PathfindingVisualizer extends Component<
     });
   };
 
+  handleAlgorithmNameSelected = (algorithmName: string) => {
+    const { pathfindingAlgorithms } = this.props;
+    const selectedAlgorithm = pathfindingAlgorithms.get(algorithmName)!;
+    this.setState({
+      selectedAlgorithm: selectedAlgorithm,
+      selectedAlgorithmName: algorithmName,
+    });
+  };
+
   render() {
     const { pathfindingAlgorithms } = this.props;
     const algorithmOptions = [];
     for (let algorithm of Array.from(pathfindingAlgorithms.keys())) {
       algorithmOptions.push(algorithm);
     }
-    const { graph } = this.state;
+    const { graph, selectedAlgorithmName } = this.state;
     return (
       <div className="PathfindingVisualizer">
-        <ApplicationBar
+        <NavBar
           algorithms={algorithmOptions}
-          onAlgorithmSelected={this.handleAlgorithmSelected}
+          selectedAlgorithm={selectedAlgorithmName}
+          onAlgorithmSelected={this.handleAlgorithmNameSelected}
           onVisualize={this.handleVisualizeClicked}
           onClear={this.handleClearClicked}
-        ></ApplicationBar>
+        ></NavBar>
         <NodeGrid
           graph={graph}
           onMouseDown={this.handleMouseDown}
           onMouseEnter={this.handleMouseEnter}
           onMouseUp={this.handleMouseUp}
         ></NodeGrid>
+        <GridTest></GridTest>
       </div>
     );
   }

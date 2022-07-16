@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import AStar from './classes/AStar';
 import Dijkstra from './classes/Dijkstra';
 import PathfindingAlgorithm from './classes/PathfindingAlgorithm';
