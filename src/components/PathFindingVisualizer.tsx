@@ -16,6 +16,8 @@ interface PathfindingVisualizerProps {
 }
 
 interface PathfindingVisualizerState {
+  numRows: number;
+  numCols: number;
   selectedAlgorithm: PathfindingAlgorithm;
   selectedAlgorithmName: string | undefined;
   graph: Node[][];
@@ -30,24 +32,32 @@ export default class PathfindingVisualizer extends Component<
     super(props);
     const selectedAlgorithm = props.pathfindingAlgorithms.values().next().value;
     console.log(Array.from(props.pathfindingAlgorithms)[0]);
-    const graph: Node[][] = this.generateGraph();
     this.state = {
+      numRows: 0,
+      numCols: 0,
       selectedAlgorithm: selectedAlgorithm,
       selectedAlgorithmName: undefined,
-      graph: graph,
+      graph: [],
       isMouseDown: false,
     };
   }
 
-  generateGraph(): Node[][] {
-    const {
-      numRows,
-      numCols,
-      startNodeRow,
-      startNodeCol,
-      endNodeRow,
-      endNodeCol,
-    } = this.props;
+  componentDidMount() {
+    const navBarHeight = document.getElementById('nav-bar')!.clientHeight;
+    const height = document.getElementById('root')!.clientHeight - navBarHeight;
+    const width = document.getElementById('root')!.clientWidth;
+    const numRows = Math.floor(height / 27);
+    const numCols = Math.floor(width / 27);
+    const graph = this.generateGraph(numRows, numCols);
+    this.setState({
+      numRows: numRows,
+      numCols: numCols,
+      graph: graph,
+    });
+  }
+
+  generateGraph(numRows: number, numCols: number): Node[][] {
+    const { startNodeRow, startNodeCol, endNodeRow, endNodeCol } = this.props;
     const graph: Node[][] = [];
     for (let row = 0; row < numRows; row++) {
       const currentRow: Node[] = [];
@@ -107,7 +117,8 @@ export default class PathfindingVisualizer extends Component<
   };
 
   handleClearClicked = () => {
-    const graph: Node[][] = this.generateGraph();
+    const { numRows, numCols } = this.state;
+    const graph: Node[][] = this.generateGraph(numRows, numCols);
     this.setState({
       graph: graph,
     });
@@ -121,6 +132,7 @@ export default class PathfindingVisualizer extends Component<
   };
 
   handleMouseEnter = (row: number, col: number) => {
+    console.log(row, col);
     const { isMouseDown } = this.state;
     if (!isMouseDown) return;
     this.toggleWall(row, col);
@@ -133,9 +145,10 @@ export default class PathfindingVisualizer extends Component<
   };
 
   toggleWall = (row: number, col: number) => {
+    console.log(row, col);
     const { graph } = this.state;
     const newGrid = graph.slice();
-    const node = newGrid[row][col];
+    const node = graph[row][col];
     const newNode = {
       ...node,
       isWall: !node.isWall,

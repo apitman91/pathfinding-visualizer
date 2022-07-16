@@ -14,6 +14,14 @@ interface NodeProps {
 }
 
 export default class NodeCell extends Component<NodeProps> {
+  shouldComponentUpdate(nextProps: NodeProps) {
+    return (
+      nextProps.isWall !== this.props.isWall ||
+      nextProps.isVisited !== this.props.isVisited ||
+      nextProps.isShortestPath !== this.props.isShortestPath
+    );
+  }
+
   render() {
     const {
       row,
@@ -40,9 +48,10 @@ export default class NodeCell extends Component<NodeProps> {
       : '';
     return (
       <div
+        id={`node-${row}-${col}`}
         className={`node ${className}`}
         onMouseDown={() => onMouseDown(row, col)}
-        onMouseEnter={() => onMouseEnter(row, col)}
+        onMouseOver={() => onMouseEnter(row, col)}
         onMouseUp={() => onMouseUp(row, col)}
       ></div>
     );

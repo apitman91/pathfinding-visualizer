@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Container, Row } from 'react-bootstrap';
 import Node from '../classes/Node';
 import NodeCell from './NodeCell';
 
@@ -13,11 +14,11 @@ export default class NodeGrid extends Component<NodeGridProps> {
   render() {
     const { graph, onMouseDown, onMouseEnter, onMouseUp } = this.props;
     return (
-      <>
+      <Container fluid className="grid">
         <div className="grid">
           {graph.map((row: Node[], rowIndex: number) => {
             return (
-              <div key={rowIndex}>
+              <Row key={rowIndex} className="grid-row">
                 {row.map((node: Node, nodeIndex: number) => {
                   return (
                     <NodeCell
@@ -29,11 +30,11 @@ export default class NodeGrid extends Component<NodeGridProps> {
                     ></NodeCell>
                   );
                 })}
-              </div>
+              </Row>
             );
           })}
         </div>
-      </>
+      </Container>
     );
   }
 }

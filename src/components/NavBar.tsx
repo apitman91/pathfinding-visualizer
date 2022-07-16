@@ -17,7 +17,7 @@ export default function NavBar(props: NavBarProps) {
     onClear,
   } = props;
   return (
-    <div className="nav-bar">
+    <Container fluid id="nav-bar">
       <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
         <Container>
           <Navbar.Brand>Pathfinding Visualizer</Navbar.Brand>
@@ -43,6 +43,6 @@ export default function NavBar(props: NavBarProps) {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    </div>
+    </Container>
   );
 }
