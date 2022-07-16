@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import './NodeCell.css';
 
 interface NodeProps {
   row: number;

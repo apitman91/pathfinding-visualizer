@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import Node from '../classes/Node';
-import './Grid.css';
 import NodeCell from './NodeCell';
 
 interface NodeGridProps {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Node from '../classes/Node';
 import PathfindingAlgorithm from '../classes/PathfindingAlgorithm';
 import PathfindingResult from '../classes/PathfindingResult';
-import GridTest from './GridTest';
 import NavBar from './NavBar';
 import NodeGrid from './NodeGrid';
 
@@ -232,7 +231,6 @@ export default class PathfindingVisualizer extends Component<
           onMouseEnter={this.handleMouseEnter}
           onMouseUp={this.handleMouseUp}
         ></NodeGrid>
-        <GridTest></GridTest>
       </div>
     );
   }

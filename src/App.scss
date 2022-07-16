@@ -1,9 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
+@import "./sass/node";
 
 .App {
   text-align: center;
 }
 
-.main-wrapper {
-
+.grid {
+  margin: 100px 0 0;
 }
