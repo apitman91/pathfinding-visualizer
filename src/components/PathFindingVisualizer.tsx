@@ -3,7 +3,6 @@ import Node from '../classes/Node';
 import PathfindingAlgorithm from '../classes/PathfindingAlgorithm';
 import PathfindingResult from '../classes/PathfindingResult';
 import NavBar from './NavBar';
-import NodeGrid from './NodeGrid';
 
 interface PathfindingVisualizerProps {
   numRows: number;
@@ -28,6 +27,7 @@ export default class PathfindingVisualizer extends Component<
   PathfindingVisualizerProps,
   PathfindingVisualizerState
 > {
+  private mouseDown: boolean = false;
   constructor(props: PathfindingVisualizerProps) {
     super(props);
     const selectedAlgorithm = props.pathfindingAlgorithms.values().next().value;
@@ -40,9 +40,13 @@ export default class PathfindingVisualizer extends Component<
       graph: [],
       isMouseDown: false,
     };
+    this.mouseDown = false;
+    this.handleResize = this.handleResize.bind(this);
+    console.log('hello');
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
     const navBarHeight = document.getElementById('nav-bar')!.clientHeight;
     const height = document.getElementById('root')!.clientHeight - navBarHeight;
     const width = document.getElementById('root')!.clientWidth;
@@ -55,6 +59,10 @@ export default class PathfindingVisualizer extends Component<
       graph: graph,
     });
   }
+
+  handleResize = () => {
+    console.log('handle resize called');
+  };
 
   generateGraph(numRows: number, numCols: number): Node[][] {
     const { startNodeRow, startNodeCol, endNodeRow, endNodeCol } = this.props;
@@ -222,6 +230,27 @@ export default class PathfindingVisualizer extends Component<
     });
   };
 
+  _handleMouseDown = (row: number, col: number) => {
+    this.mouseDown = true;
+    if (isNaN(row) || isNaN(col)) {
+      return;
+    }
+    document.getElementById('node-' + row + '-' + col)!.className =
+      'node node-wall';
+  };
+
+  _handleMouseOver = (row: number, col: number) => {
+    if (!this.mouseDown) {
+      return;
+    }
+    document.getElementById('node-' + row + '-' + col)!.className =
+      'node node-wall';
+  };
+
+  _handleMouseUp = () => {
+    this.mouseDown = false;
+  };
+
   render() {
     const { pathfindingAlgorithms } = this.props;
     const algorithmOptions = [];
@@ -238,12 +267,17 @@ export default class PathfindingVisualizer extends Component<
           onVisualize={this.handleVisualizeClicked}
           onClear={this.handleClearClicked}
         ></NavBar>
-        <NodeGrid
-          graph={graph}
-          onMouseDown={this.handleMouseDown}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseUp={this.handleMouseUp}
-        ></NodeGrid>
+        <div
+          onMouseDown={() => this._handleMouseDown(NaN, NaN)}
+          onMouseUp={this._handleMouseUp}
+        >
+          {/* <Grid
+            graph={graph}
+            onMouseDown={this._handleMouseDown}
+            onMouseOver={this._handleMouseOver}
+            onMouseUp={this._handleMouseUp}
+          ></Grid> */}
+        </div>
       </div>
     );
   }
