@@ -2,7 +2,7 @@ import './App.scss';
 import AStar from './classes/AStar';
 import Dijkstra from './classes/Dijkstra';
 import PathfindingAlgorithm from './classes/PathfindingAlgorithm';
-import Visualizer from './components/Visualizer';
+import Parent from './components/Parent';
 
 const PATHFINDING_ALGORITHMS: Map<string, PathfindingAlgorithm> = new Map([
   ["Dijkstra's", new Dijkstra()],
@@ -19,7 +19,8 @@ const END_NODE_COL = 15;
 function App() {
   return (
     <div className="App">
-      <Visualizer pathfindingAlgorithms={PATHFINDING_ALGORITHMS}></Visualizer>
+      {/* <Visualizer pathfindingAlgorithms={PATHFINDING_ALGORITHMS}></Visualizer> */}
+      <Parent></Parent>
     </div>
   );
 }
