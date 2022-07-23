@@ -1,9 +1,10 @@
 import { Component } from 'react';
-import Node from '../classes/Node';
 import PathfindingAlgorithm from '../classes/PathfindingAlgorithm';
 import PathfindingResult from '../classes/PathfindingResult';
+import animatePathfinding from '../classes/Animator';
 import Grid from './Grid';
 import NavBar from './NavBar';
+import Node from '../classes/Node';
 
 interface VisualizerProps {
   pathfindingAlgorithms: Map<string, PathfindingAlgorithm>;
@@ -86,42 +87,13 @@ export default class Visualizer extends Component<
     for (let row = 0; row < numRows; row++) {
       const currentRow = [];
       for (let col = 0; col < numCols; col++) {
-        const node = {
-          row: row,
-          col: col,
-          distance: Infinity,
-          previous: undefined,
-          isVisited: false,
-          isWall: false,
-          isStart: row === startNodeRow && col === startNodeCol,
-          isEnd: row === endNodeRow && col === endNodeCol,
-          isShortestPath: false,
-        };
-
-        if (node.isStart) {
-          this.addClass(row, col, 'node-start');
-        }
-        if (node.isEnd) {
-          this.addClass(row, col, 'node-end');
-        }
-
+        const node = new Node(row, col);
+        node.setIsStart(row === startNodeRow && col === startNodeCol);
+        node.setIsEnd(row === endNodeRow && col === endNodeCol);
         currentRow.push(node);
       }
       this.graph.push(currentRow);
     }
-  }
-
-  addClass(row: number, col: number, className: string) {
-    if (
-      this.isStartOrEndNode(row, col) &&
-      className !== 'node-start' &&
-      className !== 'node-end'
-    ) {
-      return;
-    }
-    document
-      .getElementById('node-' + row + '-' + col)!
-      .classList.add(className);
   }
 
   handleAlgorithmNameSelected = (algorithmName: string) => {
@@ -148,78 +120,35 @@ export default class Visualizer extends Component<
       startNode,
       endNode,
     )!;
-    const { visitedNodes, shortestPath } = result;
-    this.animatePathfinding(visitedNodes, shortestPath);
+    animatePathfinding(this.graph, result);
   };
-
-  animatePathfinding(visitedNodes: Node[], shortestPath: Node[]) {
-    for (let i = 0; i <= visitedNodes.length; i++) {
-      if (i === visitedNodes.length) {
-        setTimeout(() => {
-          this.animateShortestPath(shortestPath);
-        }, 10 * i);
-        return;
-      }
-      setTimeout(() => {
-        const node = visitedNodes[i];
-        const { row, col } = node;
-        this.addClass(row, col, 'node-visited');
-      }, 10 * i);
-    }
-  }
-
-  animateShortestPath(shortestPath: Node[]) {
-    for (let i = 0; i < shortestPath.length; i++) {
-      setTimeout(() => {
-        const node = shortestPath[i];
-        const { row, col } = node;
-        this.addClass(row, col, 'node-shortest-path');
-      }, 50 * i);
-    }
-  }
 
   handleClearClicked = () => {
-    this.clearGrid();
-  };
-
-  clearGrid() {
-    this.generateGraph();
     const { numRows, numCols } = this.state;
     for (let row = 0; row < numRows; row++) {
       for (let col = 0; col < numCols; col++) {
-        document
-          .getElementById('node-' + row + '-' + col)!
-          .classList.remove('node-wall', 'node-visited', 'node-shortest-path');
+        this.graph[row][col].clear();
       }
     }
-  }
+  };
 
   handleMouseDown = (row: number, col: number) => {
     this.isMouseDown = true;
     if (isNaN(row) || isNaN(col) || this.isStartOrEndNode(row, col)) {
       return;
     }
-
-    this.graph[row][col].isWall = true;
-    document.getElementById('node-' + row + '-' + col)!.className =
-      'node node-wall';
+    this.graph[row][col].setIsWall(true);
   };
 
   isStartOrEndNode(row: number, col: number): boolean {
-    const { startNodeRow, startNodeCol, endNodeRow, endNodeCol } = this.state;
-    return (
-      (row === startNodeRow && col === startNodeCol) ||
-      (row === endNodeRow && col === endNodeCol)
-    );
+    return this.graph[row][col].isStart || this.graph[row][col].isEnd;
   }
 
   handleMouseOver = (row: number, col: number) => {
     if (!this.isMouseDown || this.isStartOrEndNode(row, col)) {
       return;
     }
-    this.graph[row][col].isWall = true;
-    document.getElementById('node-' + row + '-' + col)!.className =
-      'node node-wall';
+    this.graph[row][col].setIsWall(true);
   };
 
   handleMouseUp = () => {

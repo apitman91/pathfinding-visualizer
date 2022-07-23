@@ -1,5 +1,4 @@
 import { Container, Row } from 'react-bootstrap';
-import Node from '../classes/Node';
 
 interface GridProps {
   numRows: number;
@@ -15,17 +14,17 @@ export default function Grid(props: GridProps) {
   return (
     <Container fluid className="grid">
       <div className="grid">
-        {rows.map((row: Node[], rowIndex: number) => {
+        {rows.map((row: number[], rowIndex: number) => {
           return (
             <Row key={rowIndex} className="grid-row">
-              {row.map((node: Node, nodeIndex: number) => {
+              {row.map((col: number, colIndex: number) => {
                 return (
                   <div
-                    key={nodeIndex}
-                    id={`node-${rowIndex}-${nodeIndex}`}
+                    key={colIndex}
+                    id={`node-${rowIndex}-${colIndex}`}
                     className="node"
-                    onMouseDown={() => onMouseDown(rowIndex, nodeIndex)}
-                    onMouseOver={() => onMouseOver(rowIndex, nodeIndex)}
+                    onMouseDown={() => onMouseDown(rowIndex, colIndex)}
+                    onMouseOver={() => onMouseOver(rowIndex, colIndex)}
                     onMouseUp={() => onMouseUp()}
                   ></div>
                 );

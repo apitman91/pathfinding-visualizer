@@ -1,4 +1,4 @@
-import PathfindingResult from '../../classes/PathfindingResult';
+import PathfindingResult from './PathfindingResult';
 import Node from './Node';
 
 export default function animatePathfinding(
@@ -21,7 +21,7 @@ export default function animatePathfinding(
   }
 }
 
-function animateShortestPath(graph: Node[][], shortestPath: any) {
+function animateShortestPath(graph: Node[][], shortestPath: Node[]) {
   for (let i = 0; i < shortestPath.length; i++) {
     setTimeout(() => {
       const node = shortestPath[i];
