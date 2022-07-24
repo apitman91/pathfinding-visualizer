@@ -25,8 +25,7 @@ export default function Grid(props: GridProps) {
                     className="node"
                     onMouseDown={() => onMouseDown(rowIndex, colIndex)}
                     onMouseOver={() => onMouseOver(rowIndex, colIndex)}
-                    onMouseUp={() => onMouseUp()}
-                  ></div>
+                    onMouseUp={() => onMouseUp()}></div>
                 );
               })}
             </Row>

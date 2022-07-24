@@ -46,12 +46,16 @@ export default class Node {
     this.toggleClass('node-shortest-path', isShortestPath);
   }
 
-  clear() {
+  reset() {
     this.distance = Infinity;
     this.previous = undefined;
-    this.setIsWall(false);
     this.setIsVisited(false);
     this.setIsShortestPath(false);
+  }
+
+  clear() {
+    this.reset();
+    this.setIsWall(false);
   }
 
   toggleClass(className: string, toggle: boolean) {

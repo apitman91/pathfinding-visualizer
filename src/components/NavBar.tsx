@@ -26,13 +26,11 @@ export default function NavBar(props: NavBarProps) {
             <Nav>
               <NavDropdown
                 title={selectedAlgorithm ? selectedAlgorithm : 'Algorithms'}
-                id="collasible-nav-dropdown"
-              >
+                id="collasible-nav-dropdown">
                 {algorithms.map((algorithm, i) => (
                   <NavDropdown.Item
                     key={i}
-                    onClick={() => onAlgorithmSelected(algorithm)}
-                  >
+                    onClick={() => onAlgorithmSelected(algorithm)}>
                     {algorithm}
                   </NavDropdown.Item>
                 ))}

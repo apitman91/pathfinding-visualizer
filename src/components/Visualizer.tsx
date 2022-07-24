@@ -106,6 +106,7 @@ export default class Visualizer extends Component<
   };
 
   handleVisualizeClicked = () => {
+    this.resetGrid();
     const {
       startNodeRow,
       startNodeCol,
@@ -122,6 +123,14 @@ export default class Visualizer extends Component<
     )!;
     animatePathfinding(this.graph, result);
   };
+
+  resetGrid() {
+    for (let row of this.graph) {
+      for (let node of row) {
+        node.reset();
+      }
+    }
+  }
 
   handleClearClicked = () => {
     const { numRows, numCols } = this.state;
@@ -163,25 +172,22 @@ export default class Visualizer extends Component<
     }
     const { numRows, numCols, selectedAlgorithmName } = this.state;
     return (
-      <div className="PathfindingVisualizer">
+      <div className="visualizer">
         <NavBar
           algorithms={algorithmOptions}
           selectedAlgorithm={selectedAlgorithmName}
           onAlgorithmSelected={this.handleAlgorithmNameSelected}
           onVisualize={this.handleVisualizeClicked}
-          onClear={this.handleClearClicked}
-        ></NavBar>
+          onClear={this.handleClearClicked}></NavBar>
         <div
           onMouseDown={() => this.handleMouseDown(NaN, NaN)}
-          onMouseUp={this.handleMouseUp}
-        >
+          onMouseUp={this.handleMouseUp}>
           <Grid
             numRows={numRows}
             numCols={numCols}
             onMouseDown={this.handleMouseDown}
             onMouseOver={this.handleMouseOver}
-            onMouseUp={this.handleMouseUp}
-          ></Grid>
+            onMouseUp={this.handleMouseUp}></Grid>
         </div>
       </div>
     );
